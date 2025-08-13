@@ -4,22 +4,19 @@ import NotesClient from './Notes.client'
 import type { Metadata } from 'next';
 
 const siteUrl =process.env.NEXT_PUBLIC_SITE_URL ?? 'https://notehub-yourname.vercel.app';
-type PageProps ={params:{ slug?: string[] }};
-
-
-const asFilterTag = (raw?: string): FilterTag => {
-  const allowed: FilterTag[] = ['All', 'Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
-  const v = (raw ?? 'All') as FilterTag;
-  return allowed.includes(v) ? v : 'All';};
+type PageProps ={params:Promise<{ slug?: string[] }>;};
+const ALLOWED = ['All', 'Todo', 'Work', 'Personal', 'Meeting', 'Shopping'] as const;
+const asFilterTag = (raw?: string): FilterTag =>
+  ALLOWED.includes((raw ?? 'All') as FilterTag) ? ((raw ?? 'All') as FilterTag) : 'All';
 const humanize = (tag?: string) => tag && tag !== '' ? `“${tag}”` : 'All notes';
+
 export async function generateMetadata({
-  params,}:{params: {slug: string[]};}):Promise<Metadata>{
-const tag = Array.isArray(params.slug) && params.slug.length > 0
-  ? params.slug[0]
-  : '';
+  params,}:{params: Promise<{slug: string[]}>}):Promise<Metadata>{
+const { slug } = await params;
+const tag = slug?.[0]  ?? 'All'; 
 const title =`Notes - ${humanize(tag)} | NoteHub`;
 const description = `Browse notes filtered by ${humanize(tag)} in NoteHub.`;
-const url = tag ? `${siteUrl}/notes/filter/${tag}` : `${siteUrl}/notes/filter/All`;
+const url = tag && tag !== 'All' ? `${siteUrl}/notes/filter/${tag}` : `${siteUrl}/notes/filter/All`;
 
 return{
 title,description,
