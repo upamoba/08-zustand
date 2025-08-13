@@ -7,16 +7,12 @@ import { fetchNotes } from '../../../../lib/api';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import Pagination from '../../../../components/Pagination/Pagination';
 import NoteList from '../../../../components/NoteList/NoteList';
-import Modal from '../../../../components/Modal/Modal';
-import NoteForm from '../../../../components/NoteForm/NoteForm';
 import { LoadingIndicator } from '../../../../components/LoadingIndicator/LoadingIndicator';
 import { ErrorMessage } from '../../../../components/ErrorMessage/ErrorMessage';
 import { EmptyState } from '../../../../components/EmptyState/EmptyState';
 import styles from './NotesPage.module.css';
 import { FilterTag } from '@/types/note';
-
-
-
+import Link from 'next/link';
 
 interface NotesClientProps {
   initialData: FetchNotesResponse
@@ -27,7 +23,7 @@ const NotesClient: FC<NotesClientProps> = ({ initialData , filterTag }) => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 500)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+ 
 
   
   useEffect(() => {
@@ -61,9 +57,9 @@ const notes = data?.data ?? []
             onPageChange={setPage}
           />
         )}
-        <button className={styles.button} onClick={() => setIsModalOpen(true)}>
-          Create note +
-        </button>
+ <Link href="/notes/action/create" className={styles.button}>
+         Create note +
+</Link>
       </div>
 
       {isLoading && <LoadingIndicator />}
@@ -75,13 +71,9 @@ const notes = data?.data ?? []
         !isLoading && <EmptyState message="No notes found." />
       )}
 
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm onClose={() => setIsModalOpen(false)} />
-        </Modal>
-      )}
+      
     </div>
-  )
-}
+  );
+};
 
 export default NotesClient
