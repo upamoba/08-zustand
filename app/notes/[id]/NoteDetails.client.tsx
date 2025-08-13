@@ -8,7 +8,7 @@ import type { Note } from '../../../types/note';
 
 
 export interface NoteDetailsClientProps {
-  noteId: string
+  noteId: string;
 }
 
 export default function NoteDetailsClient({ noteId }: NoteDetailsClientProps) {

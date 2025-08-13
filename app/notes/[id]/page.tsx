@@ -1,25 +1,26 @@
 import type { Metadata } from 'next';
 import { fetchNoteById } from '@/lib/api';
 import NoteDetailsClient from './NoteDetails.client';
+
+
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://notehub-yourname.vercel.app';
-type PageProps = { params: { id: string } };
-export async function generateMetadata({
-  params,
-}:{params: {id: string};
+type PageProps = { params: Promise <{ id: string }> };
+export async function generateMetadata({ params}:{params:Promise< {id: string}>
  }): Promise<Metadata> {
+  const {id} = await params;
   try {
-    const note = await fetchNoteById(params.id);
+    const note = await fetchNoteById(id);
     const title = `${note.title} | NoteHub`;
-    const short =(note.content || '').trim().slice(0, 140) || 'Note details.';
-   const description = short;
+    const description  =(note.content || '').trim().slice(0, 140) || 'Note details.';
+  
     return {
       title,
       description,
       openGraph: {
         title,
         description,
-        url: `${siteUrl}/notes/${params.id}`,
+        url: `${siteUrl}/notes/${id}`,
         images: [{ url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg' }],
       },
     };
@@ -32,13 +33,14 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
-        url: `${siteUrl}/notes/${params.id}`,
+        url: `${siteUrl}/notes/${id}`,
         images: [{ url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg' }],
       },
     };
   }
 }
 
-export default function NoteDetailsPage({ params }: PageProps) {
-  return <NoteDetailsClient noteId={params.id} />;
+export default async function NoteDetailsPage({ params }: PageProps) {
+  const { id } = await params;
+  return <NoteDetailsClient noteId={id} />;
 }
