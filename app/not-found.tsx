@@ -3,12 +3,12 @@ import type { Metadata } from 'next';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://notehub-yourname.vercel.app';
-export const metedata: Metadata = { 
+export const metadata: Metadata = {
   title: '404 - Page not found | NoteHub',
   description: 'Page not found. Unfortunately, such a page does not exist.',
-  openGraph:{
-    title:'404 - Page not found | NoteHub',
-    description:'Page not found. Unfortunately, such a page does not exist.',
+  openGraph: {
+    title: '404 - Page not found | NoteHub',
+    description: 'Page not found. Unfortunately, such a page does not exist.',
     url: `${siteUrl}/404`,
     images: [{ url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg' }],
   },
